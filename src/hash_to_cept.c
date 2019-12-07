@@ -78,6 +78,10 @@ int output_page(const char *pagenum, const char *page, const int lang, links_t *
 	print_links(f, links, prefix);
 	fprintf(f, ", \"publisher_color\": 7\n}\n");
 	fclose(f);
+
+	snprintf(fn, sizeof(fn), "%s.glob", pagenum);
+	f=fopen(fn, "w");
+	fclose(f);
 }
 
 int handle_output_page(const char *line, const char *page, const int lang, links_t **links, const char *prefix)
