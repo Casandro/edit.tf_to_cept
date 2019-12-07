@@ -43,7 +43,7 @@ void print_char_int(FILE *f, const char c, const int lang, const int cnt)
 	if (cnt<2) return; //if only one character needs to printed, do nothing;
 	//For less than 4 characters just print it 4 times
 	if (cnt<4) return print_char_int(f, c, lang, cnt-1);
-	fprintf(f, "\x12%c", (cnt-1)+0x41);
+	fprintf(f, "\x12%c", (cnt-2)+0x41);
 }
 
 void print_char(FILE *f, const char c, const int lang, const int cnt, const int mosaik)
