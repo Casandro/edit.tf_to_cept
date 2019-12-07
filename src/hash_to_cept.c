@@ -76,7 +76,7 @@ int output_page(const char *pagenum, const char *page, const int lang, links_t *
 	f=fopen(fn, "w");
 	fprintf(f, "{ \"clear_screen\": false,\n"); 
 	print_links(f, links, prefix);
-	fprintf(f, ", \"publisher_color\", 7\n}\n");
+	fprintf(f, ", \"publisher_color\": 7\n}\n");
 	fclose(f);
 }
 
