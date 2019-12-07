@@ -97,6 +97,11 @@ int handle_output_page(const char *line, const char *page, const int lang, links
 		if ( ( (c>='0') && (c<='9') ) || ( (c>='a') && (c<='z')) ) continue;
 		pagenum[n]=0;
 	}
+	int len=strlen(pagenum);
+	char c=pagenum[len-1];
+	printf("pagenum: %s %d %x\n", pagenum, len, c);
+
+	if ((c<'a') || (c>'z')) strcat(pagenum, "a");
 	output_page(pagenum, page, lang, *links, prefix);
 	*links=NULL;
 	return 0;
