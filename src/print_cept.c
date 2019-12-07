@@ -127,7 +127,7 @@ void print_control_character(FILE *f, const char c, int *mosaik)
 
 void print_line(FILE *f, const char c[], const int lang)
 {
-	fprintf(f, "\x87\x8c\x9c\x9f\x0d"); //reset all attributes and move to the left, bugfix for buggy terminals (xcept)
+
 	int mosaik=0;
 	char oc=-1; //previous character;
 	int cnt=0; //number of identical characters
@@ -150,6 +150,7 @@ void print_line(FILE *f, const char c[], const int lang)
 		}
 	}
 	print_char(f, oc, lang, cnt, mosaik);
+//	fprintf(f, "\x87\x8c\x9c\x9f"); //reset all attributes and move to the left, bugfix for buggy terminals (xcept)
 }
 
 void print_page(FILE *f, const char c[], const int lang)
@@ -159,6 +160,7 @@ void print_page(FILE *f, const char c[], const int lang)
 	fprintf(f, "\x1e"); //Cursor to home position
 	int line;
 	for (line=0; line<24; line++) {
+		fprintf(f, "\x1f%c%c", 0x41+line, 0x41);
 		print_line(f, &(c[line*40]), lang);
 	}
 }
