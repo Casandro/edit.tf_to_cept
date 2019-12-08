@@ -32,11 +32,16 @@ int handle_hash(const char *hash, char *page, int *lang)
 {
 	if (hash==NULL) return -1;
 	char *colon=strchr(hash, ':');
-	if (colon==NULL) return -1; //No colon found, therefore cannot be a hash
-	if (colon-hash!=2) return -1; //No character in between
+	if (colon==NULL) {
+		fprintf(stderr, "No colon found, therefore cannot be hash\n");
+		return -2; //No colon found, therefore cannot be a hash
+	}
+	if (colon-hash!=2) return -3; //No character in between
 	int l=hash[1]-'0'; //decode language
-	if (l<0) return -1; //Invalid language
-	if (l>9) return -1; //Invalid language
+	if ((l<0) || (l>9) ) {
+		fprintf(stderr, "Invalid language %d\n", l);
+		return -4; //Invalid language
+	}
 	char *colon2=strchr(&(colon[1]), ':'); //Is there a second colon
 	if (colon2!=NULL) *colon2=0; //Cut of anything after second colon if it exists
 	decode_base64_to_char(&(colon[1]), page); //Decode string
@@ -125,11 +130,23 @@ int main(int argc, char *argv[])
 	char page[1000];
 	int language=0;
 
-	if (argc==2) {
-		handle_hash(argv[1], page, &language);
+	if (argc!=2) {
+		fprintf(stderr, "usage %s <page URL> for single page conversion or\n%s <prefix> for multiple pages\n", argv[0], argv[0]);
+		return 1;
+	}
+
+	char *hash=strchr(argv[1],'#');
+	if (hash!=NULL) { //Single page conversion
+		int res=handle_hash(hash, page, &language);
+		if (res<0) {
+			fprintf(stderr, "handle_hash returned %d\n", res);
+			return 0;
+		}
 		print_page(stdout, page, language);
 		return 0;
 	}
+
+	char *prefix=argv[1];
 
 
 	links_t *links=NULL;
@@ -140,7 +157,7 @@ int main(int argc, char *argv[])
 			int len=strlen(line);
 			line[len-1]=0; //Remove final character (should be newline)
 		}
-		int res=handle_line(line, page, &language, &links, "3603");
+		int res=handle_line(line, page, &language, &links, prefix);
 		if (res<0) printf("couldn't understand line: %s\n", line);
 	}
 	return 0;
