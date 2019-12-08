@@ -122,9 +122,16 @@ int handle_line(char *line, char *page, int *lang, links_t **links, const char *
 
 int main(int argc, char *argv[])
 {
-
 	char page[1000];
 	int language=0;
+
+	if (argc==2) {
+		handle_hash(argv[1], page, &language);
+		print_page(stdout, page, language);
+		return 0;
+	}
+
+
 	links_t *links=NULL;
 
 	char line[LINELEN];
